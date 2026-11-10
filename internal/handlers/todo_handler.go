@@ -32,3 +32,14 @@ func CreateTodoHandler(pool *pgxpool.Pool) gin.HandlerFunc {
 	}
 
 }
+
+func GetAllTodos(pool *pgxpool.Pool) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		todos, err := repository.GetAll(pool)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusOK, todos)
+	}
+}

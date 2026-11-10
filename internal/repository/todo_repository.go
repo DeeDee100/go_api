@@ -36,3 +36,40 @@ func CreateTodo(pool *pgxpool.Pool, title string, completed bool, userID string)
 	return &todo, nil
 
 }
+
+func GetAll(pool *pgxpool.Pool) ([]models.Todo, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var query string = `SELECT * FROM todos ORDER BY created_at DESC`
+
+	var todos []models.Todo = []models.Todo{}
+
+	var rows, err = pool.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var todo models.Todo
+
+		err = rows.Scan(
+			&todo.ID,
+			&todo.Title,
+			&todo.Completed,
+			&todo.CreatedAt,
+			&todo.UpdatedAt,
+			&todo.UserID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		todos = append(todos, todo)
+	}
+
+	return todos, nil
+
+}

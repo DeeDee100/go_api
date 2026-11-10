@@ -40,6 +40,7 @@ func main() {
 	})
 
 	router.POST("/todos", handlers.CreateTodoHandler(pool))
+	router.GET("/todos", handlers.GetAllTodos(pool))
 
 	// router.Run(":" + cfg.Port)
 	router.Run(":8080")
