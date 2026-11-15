@@ -1,4 +1,5 @@
 #  docker exec -ti 7f256cdbb88a psql -U appuser -d appdb
+#  sudo service postgresql stop
 
 ifneq (,$(wildcard ./.env))
     include .env
